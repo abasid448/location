@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerala Administrative Data Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="background-decor">
+        <div class="aurora-blob blob-1"></div>
+        <div class="aurora-blob blob-2"></div>
+        <div class="aurora-blob blob-3"></div>
+    </div>
+    <header class="glass-header">
+        <div class="container header-content">
+            <div class="logo">
+                <span class="logo-icon">🌴  </span>
+                <h1>Kerala Admin<span class="highlight">Data</span></h1>
+            </div>
+            <div class="search-container">
+                <button id="searchBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <input type="text" id="searchInput" placeholder="Search districts, taluks...">
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- New Dashboard Widget -->
+        <div id="stats-dashboard" class="stats-dashboard"></div>
+
+        <section id="dashboard" class="dashboard-grid">
+            <!-- District Cards will be injected here -->
+        </section>
+
+        <section id="details-view" class="hidden">
+            <button id="backBtn" class="secondary-btn">← Back to Overview</button>
+            <div id="district-header">
+                <!-- District Header Info -->
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="districtPanchayat">District Panchayat</button>
+                <button class="tab-btn" data-tab="blockPanchayats">Block Panchayats</button>
+                <button class="tab-btn" data-tab="corporations">Corporations</button>
+                <button class="tab-btn" data-tab="municipalities">Municipalities</button>
+                <button class="tab-btn" data-tab="taluks">Taluks & Panchayats</button>
+            </div>
+
+            <div id="tab-content">
+                <!-- Content injected via JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Kerala Administrative Data Management System. All rights reserved.</p>
+        (Data source: Mock/Placeholder for demonstration)</p>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
