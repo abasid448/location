@@ -42,27 +42,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         elements.statsWidget.innerHTML = `
-            <div class="stat-card">
+            <div class="stat-card entrance-hidden">
                 <h3>Total Districts</h3>
                 <div class="value">${totalDistricts}</div>
+                <svg class="sparkline" viewBox="0 0 100 20"><path d="M0,15 Q25,5 50,15 T100,10" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/></svg>
             </div>
-             <div class="stat-card">
+             <div class="stat-card entrance-hidden">
                 <h3>Corporations</h3>
                 <div class="value">${totalCorps}</div>
+                <svg class="sparkline" viewBox="0 0 100 20"><path d="M0,10 Q20,18 40,10 T80,15 T100,5" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/></svg>
             </div>
-             <div class="stat-card">
+             <div class="stat-card entrance-hidden">
                 <h3>Municipalities</h3>
                 <div class="value">${totalMunis}</div>
+                <svg class="sparkline" viewBox="0 0 100 20"><path d="M0,18 Q30,5 60,15 T100,12" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/></svg>
             </div>
-             <div class="stat-card">
-                <h3>Grama Panchayats</h3>
+             <div class="stat-card entrance-hidden">
+                <h3>Panchayats</h3>
                 <div class="value">${totalGPs}</div>
-            </div>
-             <div class="stat-card">
-                <h3>Block Panchayats</h3>
-                <div class="value">${totalBPs}</div>
+                <svg class="sparkline" viewBox="0 0 100 20"><path d="M0,5 Q20,15 40,5 T80,12 T100,8" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/></svg>
             </div>
         `;
+        // Observe stats too
+        elements.statsWidget.querySelectorAll('.stat-card').forEach(s => entranceObserver.observe(s));
     }
 
     // Render Dashboard (District Cards)
@@ -75,25 +77,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         districts.forEach((district, index) => {
             const card = document.createElement('div');
-            card.className = 'district-card';
-            card.style.animationDelay = `${index * 0.05}s`; // Stagger effect
+            card.className = 'district-card entrance-hidden';
 
             card.innerHTML = `
                 <h2>${district.name}</h2>
                 <div class="stats">
-                    <div class="stat-item">
-                        <span>🏛️</span>
-                        <span>${calculateTotalBodies(district)} Local Bodies</span>
-                    </div>
-                </div>
-                <div class="stats">
-                    <span class="badge badge-corp">${district.localBodies.corporations.length} Corp</span>
-                    <span class="badge badge-muni">${district.localBodies.municipalities.length} Muni</span>
-                    <span class="badge badge-bp">${district.localBodies.blockPanchayats.length} BP</span>
-                    <span class="badge badge-gp">${district.localBodies.taluks.reduce((acc, t) => acc + t.gramaPanchayats.length, 0)} GPs</span>
+                    <span class="badge">Local Bodies <span>${calculateTotalBodies(district)}</span></span>
+                    <span class="badge">Corporations <span>${district.localBodies.corporations.length}</span></span>
+                    <span class="badge">Municipalities <span>${district.localBodies.municipalities.length}</span></span>
                 </div>
             `;
-            setupTilt(card); // Phase 10: Cinematic Tilt
+            setupTilt(card);
+            entranceObserver.observe(card);
             card.addEventListener('click', () => showDistrictDetails(district));
             elements.dashboard.appendChild(card);
         });
@@ -108,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return corps + munis + blocks + gps + 1; // +1 for District Panchayat
     }
 
-    // Cinematic Parallax Tilt (Phase 10)
+    // Cinematic Parallax Tilt (Ultra Pro 3D)
     function setupTilt(element) {
         element.addEventListener('mousemove', (e) => {
             const rect = element.getBoundingClientRect();
@@ -117,35 +112,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            // Heavier, slower rotation for "Royal Weight"
-            // Max 3 degrees (very subtle but heavy)
-            const rotateX = ((y - centerY) / centerY) * -3;
-            const rotateY = ((x - centerX) / centerX) * 3;
+            const rotateX = ((y - centerY) / centerY) * -5;
+            const rotateY = ((x - centerX) / centerX) * 5;
 
-            element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            element.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale3d(1.02, 1.02, 1.02)`;
+
+            // Move internal elements for "True Depth"
+            const title = element.querySelector('h2');
+            if (title) {
+                title.style.transform = `translateX(${(x - centerX) / 20}px) translateY(${(y - centerY) / 20}px)`;
+            }
         });
 
         element.addEventListener('mouseleave', () => {
-            element.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)'; // Smooth return
-            element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-            setTimeout(() => { element.style.transition = ''; }, 500); // Clear transition to avoid lag on next hover
-        });
-
-        element.addEventListener('mouseenter', () => {
-            element.style.transition = 'transform 0.1s ease-out'; // Quick entry
+            element.style.transition = 'all 0.8s var(--ease-ultra)';
+            element.style.transform = 'perspective(1200px) rotateX(0) rotateY(0) translateY(0) scale3d(1, 1, 1)';
+            const title = element.querySelector('h2');
+            if (title) title.style.transform = '';
+            setTimeout(() => { element.style.transition = ''; }, 800);
         });
     }
+
+    // Entrance Observer (Staggered Load)
+    const entranceObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, index * 50);
+                entranceObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
 
     // Render District Details
     function showDistrictDetails(district) {
         currentDistrict = district;
         elements.dashboard.classList.add('hidden');
         elements.detailsView.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         // Render Header
         elements.districtHeader.innerHTML = `
-            <h1 style="color: var(--primary-color); margin-bottom: 0.5rem;">${district.name} District</h1>
-            <p style="color: var(--text-muted);">Headquarters: ${district.headquarters}</p>
+            <h1>${district.name}</h1>
+            <p>Administrative Headquarters: ${district.headquarters}</p>
         `;
 
         // content for the first tab (District Panchayat default)
